@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
     status,
-    HTTPException,
+    Response,
 )
 from sqlalchemy.orm import Session
 
@@ -49,24 +49,26 @@ def read_post_likes(post_id: int, db: Session = Depends(get_db)):
 @router.post("/{post_id}/like/", tags=["likes"])
 def like_post(
         post_id: int,
+        response: Response,
         current_user: schemas.User = Depends(get_current_user),
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
 ):
     is_liked = crud.get_user_liked_post(
         post_id=post_id, user_id=current_user.id, db=db
     )
 
     if is_liked:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Post is already liked by this user")
+        return {"detail": "Post is already liked by this user"}
 
     crud.like_post(db=db, post_id=post_id, user_id=current_user.id)
+    response.status_code = status.HTTP_201_CREATED
     return {"detail": f"User {current_user.id} liked post {post_id}"}
 
 
 @router.delete("/{post_id}/unlike/", tags=["likes"])
 def unlike_post(
         post_id: int,
+        response: Response,
         current_user: schemas.User = Depends(get_current_user),
         db: Session = Depends(get_db),
 ):
@@ -75,8 +77,8 @@ def unlike_post(
     )
 
     if not is_liked:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Post was not liked by this user")
+        return {"detail": "Post was not liked by this user"}
 
     crud.unlike_post(db=db, post_id=post_id, user_id=current_user.id)
+    response.status_code = status.HTTP_201_CREATED
     return {"detail": f"User {current_user.id} unliked post {post_id}"}
