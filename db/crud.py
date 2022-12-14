@@ -1,11 +1,7 @@
 from datetime import date, datetime, timedelta
-from typing import Optional
 
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from jose import jwt
-from passlib.context import CryptContext
 
 from db import models, schemas
 
@@ -31,18 +27,6 @@ def update_user_last_login(user: models.User, db: Session):
 def update_user_last_request(user: models.User, db: Session):
     user.last_request = datetime.now()
     db.commit()
-
-
-def create_user(db: Session, user: schemas.UserCreate) -> models.User:
-    hashed_password = get_password_hash(user.password)
-    db_user = models.User(
-        username=user.username,
-        hashed_password=hashed_password,
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
 
 
 # Posts

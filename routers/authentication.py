@@ -11,7 +11,8 @@ from db.dependencies import get_db
 from db import crud, schemas
 from authentication.services import (
     authenticate_user,
-    create_access_token
+    create_access_token,
+    create_user,
 )
 
 
@@ -45,5 +46,5 @@ def sign_up_user(form_data: OAuth2PasswordRequestForm = Depends(),
     user = schemas.UserCreate(
         username=form_data.username, password=form_data.password
     )
-    db_user = crud.create_user(db=db, user=user)
+    db_user = create_user(db=db, user=user)
     return db_user

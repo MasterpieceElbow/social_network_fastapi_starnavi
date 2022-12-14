@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from jose import jwt
 from passlib.context import CryptContext
 
-from db import models, crud
+from db import models, crud, schemas
 from authentication.config import (
     SECRET_KEY,
     ALGORITHM,
@@ -33,6 +33,18 @@ def authenticate_user(
     if not verify_password(password, user_db.hashed_password):
         return
     return user_db
+
+
+def create_user(db: Session, user: schemas.UserCreate) -> models.User:
+    hashed_password = get_password_hash(user.password)
+    db_user = models.User(
+        username=user.username,
+        hashed_password=hashed_password,
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
 
 
 def create_access_token(
