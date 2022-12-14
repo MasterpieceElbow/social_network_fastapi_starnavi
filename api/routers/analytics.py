@@ -21,7 +21,7 @@ router = APIRouter(
 )
 
 
-@router.get("/likes/", response_model=dict[date, int], tags=["likes"])
+@router.get("/", response_model=dict[date, int], tags=["likes"])
 def likes_by_period(
         db: Session = Depends(get_db),
         date_from: date = Query(),
