@@ -27,10 +27,12 @@ def read_posts(db: Session = Depends(get_db)):
 
 @router.post("/", response_model=schemas.Post)
 def create_post(
+        response: Response,
         post: schemas.PostCreate,
         db: Session = Depends(get_db),
         current_user: schemas.User = Depends(get_current_user)
 ):
+    response.status_code = status.HTTP_201_CREATED
     return crud.create_user_post(db=db, post=post, user_id=current_user.id)
 
 

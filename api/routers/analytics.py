@@ -28,8 +28,10 @@ def likes_by_period(
         date_to: date = Query()
 ):
     if date_to < date_from:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="date_to is lower than date_from")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="date_to should be greater than or equal to date_from"
+        )
     return crud.get_likes_within_period_group_by_date(
         date_from=date_from, date_to=date_to, db=db
     )
