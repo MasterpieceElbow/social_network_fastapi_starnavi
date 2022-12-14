@@ -3,7 +3,8 @@ from datetime import date, datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from db import models, schemas
+from db import models
+from api.schemas import schemas
 
 
 # User

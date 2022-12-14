@@ -8,7 +8,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from db.dependencies import get_db
-from db import crud, schemas
+from db import crud
+from api.schemas import schemas
 from authentication.services import (
     authenticate_user,
     create_access_token,

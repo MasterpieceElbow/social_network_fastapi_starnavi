@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from jose import jwt
 from passlib.context import CryptContext
 
-from db import models, crud, schemas
+from db import models, crud
+from api.schemas import schemas
 from authentication.config import (
     SECRET_KEY,
     ALGORITHM,

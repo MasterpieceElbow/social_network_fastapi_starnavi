@@ -3,8 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 
-from db import models, crud, schemas
+from db import models, crud
 from db.dependencies import get_db
+from api.schemas import schemas
 from authentication.config import (
     SECRET_KEY,
     ALGORITHM,

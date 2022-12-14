@@ -7,7 +7,8 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from db.dependencies import get_db
-from db import schemas, crud
+from db import crud
+from api.schemas import schemas
 from authentication.dependencies import get_current_user
 
 
