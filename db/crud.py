@@ -10,44 +10,6 @@ from passlib.context import CryptContext
 from db import models, schemas
 
 
-# JWT
-SECRET_KEY = "2516a1198860b4112a0df38409991c3d8c3a48e6c920493fc3ca9394ec722fd6"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def verify_password(plain_password: str, hashed_password) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password) -> str:
-    return pwd_context.hash(password)
-
-
-def authenticate_user(
-        db: Session, username: str, password: str
-) -> Optional[models.User]:
-    user_db = get_user_by_username(db=db, username=username)
-    if not user_db:
-        return
-    if not verify_password(password, user_db.hashed_password):
-        return
-    return user_db
-
-
-def create_access_token(
-        data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-) -> str:
-    to_encode = data.copy()
-    to_encode.update({"exp": datetime.utcnow() + expires_delta})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
 # User
 def get_user(db: Session, user_id: int) -> models.User:
     return db.query(models.User).filter(models.User.id == user_id).first()

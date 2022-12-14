@@ -9,7 +9,8 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
-from db.dependencies import get_db, get_current_user
+from authentication.dependencies import get_current_user
+from db.dependencies import get_db
 from db import crud
 
 
@@ -32,4 +33,3 @@ def likes_by_period(
     return crud.get_likes_within_period_group_by_date(
         date_from=date_from, date_to=date_to, db=db
     )
-

@@ -9,6 +9,10 @@ from sqlalchemy.orm import Session
 
 from db.dependencies import get_db
 from db import crud, schemas
+from authentication.dependencies import (
+    authenticate_user,
+    create_access_token
+)
 
 
 router = APIRouter(
@@ -21,7 +25,7 @@ def login_for_access_token(
         db: Session = Depends(get_db),
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    user = crud.authenticate_user(
+    user = authenticate_user(
         db=db, username=form_data.username, password=form_data.password
     )
     if not user:
@@ -31,7 +35,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     crud.update_user_last_login(user=user, db=db)
-    access_token = crud.create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
