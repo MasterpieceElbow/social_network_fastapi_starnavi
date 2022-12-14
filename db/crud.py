@@ -69,7 +69,7 @@ def unlike_post(db: Session, post_id: int, user_id: int) -> None:
     db.commit()
 
 
-def user_liked_post(
+def get_user_liked_post(
         db: Session,
         post_id: int,
         user_id: int,

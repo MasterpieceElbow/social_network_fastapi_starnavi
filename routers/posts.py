@@ -51,7 +51,7 @@ def like_post(
         current_user: schemas.User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    is_liked = crud.user_liked_post(
+    is_liked = crud.get_user_liked_post(
         post_id=post_id, user_id=current_user.id, db=db
     )
 
@@ -69,7 +69,7 @@ def unlike_post(
         current_user: schemas.User = Depends(get_current_user),
         db: Session = Depends(get_db),
 ):
-    is_liked = crud.user_liked_post(
+    is_liked = crud.get_user_liked_post(
         post_id=post_id, user_id=current_user.id, db=db
     )
 
