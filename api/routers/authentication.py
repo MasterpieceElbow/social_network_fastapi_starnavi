@@ -3,6 +3,7 @@ from fastapi import (
     Depends,
     status,
     HTTPException,
+    Response,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -43,6 +44,7 @@ def login(
 
 @router.post("/sign-up/", response_model=schemas.User)
 def sign_up_user(
+        response: Response,
         form_data: OAuth2PasswordRequestForm = Depends(),
         db: Session = Depends(get_db)
 ):
@@ -57,4 +59,5 @@ def sign_up_user(
         username=form_data.username, password=form_data.password
     )
     db_user = create_user(db=db, user=user)
+    response.status_code = status.HTTP_201_CREATED
     return db_user

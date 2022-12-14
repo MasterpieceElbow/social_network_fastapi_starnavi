@@ -14,6 +14,10 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
+missing_user_exception = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exist"
+)
+
 
 @router.get("/", response_model=list[schemas.User])
 def read_users(db: Session = Depends(get_db)):
@@ -25,8 +29,8 @@ def read_users(db: Session = Depends(get_db)):
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db=db, user_id=user_id)
     if not db_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="User doesn't exists")
+        raise missing_user_exception
+
     return db_user
 
 
@@ -38,10 +42,8 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 def read_user_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db=db, user_id=user_id)
     if not db_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User doesn't exists",
-        )
+        raise missing_user_exception
+
     return db_user.posts
 
 
@@ -53,8 +55,6 @@ def read_user_posts(user_id: int, db: Session = Depends(get_db)):
 def read_user_liked_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db=db, user_id=user_id)
     if not db_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User doesn't exists",
-        )
+        raise missing_user_exception
+
     return db_user.liked_posts
