@@ -9,8 +9,9 @@ from sqlalchemy import (
     Table,
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-from db.database import Base
+Base = declarative_base()
 
 PostsLikes = Table(
     "post_likes",
