@@ -23,7 +23,7 @@ router = APIRouter(
 
 
 @router.post("/token/", response_model=schemas.Token)
-def login_for_access_token(
+def login(
         db: Session = Depends(get_db),
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
@@ -42,8 +42,17 @@ def login_for_access_token(
 
 
 @router.post("/sign-up/", response_model=schemas.User)
-def sign_up_user(form_data: OAuth2PasswordRequestForm = Depends(),
-                 db: Session = Depends(get_db)):
+def sign_up_user(
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        db: Session = Depends(get_db)
+):
+    user_db = crud.get_user_by_username(db=db, username=form_data.username)
+    if user_db:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with provided username already exists",
+        )
+
     user = schemas.UserCreate(
         username=form_data.username, password=form_data.password
     )
