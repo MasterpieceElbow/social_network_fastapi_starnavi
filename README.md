@@ -26,6 +26,7 @@ Python3 should be installed
 - like post `POST /api/posts/{post_id}/like/`
 - unlike post `POST /api/posts/{post_id}/unlike/`
 - likes analytics `GET /api/analytics/?date_from={date}&date_to{date}`
+- user activity (last_login, last_request) `GET /api/users/{user_id}/`
 
 ## 1.4 API endpoints screenshots
 
