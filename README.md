@@ -10,7 +10,7 @@ Python3 should be installed
 4. Launch server `uvicorn main:app --reload`
 5. Check api endpoints docs:  `http://127.0.0.1:8000/docs`
 6. Run tests: `python -m pytest`
-7. Can authorize with user2:password2 or user3:password3
+7. Can authorize with `user1:password1` or `user2:password2`
 
 ## 1.2 Features:
 - Login and sing up via OAuth2 and JWT
