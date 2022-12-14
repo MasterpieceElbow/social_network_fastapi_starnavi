@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from db.dependencies import get_db
 from db import crud, schemas
-from authentication.dependencies import (
+from authentication.services import (
     authenticate_user,
     create_access_token
 )
