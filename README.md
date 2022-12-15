@@ -28,6 +28,8 @@ Python3 should be installed
 - likes analytics `GET /api/analytics/?date_from={date}&date_to={date}`
 - user activity (last_login, last_request) `GET /api/users/{user_id}/`
 
+**Note**: all endpoints, except `login` and `signup` are allowed only for authenticated user.
+
 ## 1.4 API endpoints screenshots
 
 ![](https://user-images.githubusercontent.com/80070761/207613038-3b58237f-7b2d-4109-b11e-8b287291092a.png)
