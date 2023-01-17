@@ -6,7 +6,7 @@ from fastapi import (
     Response,
 )
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.dependencies import get_db
 from db import crud
@@ -24,11 +24,11 @@ router = APIRouter(
 
 
 @router.post("/token/", response_model=schemas.Token)
-def login(
-        db: Session = Depends(get_db),
+async def login(
+        db: AsyncSession = Depends(get_db),
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    user = authenticate_user(
+    user = await authenticate_user(
         db=db, username=form_data.username, password=form_data.password
     )
     if not user:
@@ -37,18 +37,22 @@ def login(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    crud.update_user_last_login(user=user, db=db)
+    await crud.update_user_last_login(user_id=user.id, db=db)
+    await db.commit()
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/sign-up/", response_model=schemas.User)
-def sign_up_user(
+@router.post(
+    "/sign-up/", 
+    response_model=schemas.User,
+)
+async def sign_up_user(
         response: Response,
         form_data: OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db)
+        db: AsyncSession = Depends(get_db)
 ):
-    user_db = crud.get_user_by_username(db=db, username=form_data.username)
+    user_db = await crud.get_user_by_username(db=db, username=form_data.username)
     if user_db:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -59,5 +63,7 @@ def sign_up_user(
         username=form_data.username, password=form_data.password
     )
     db_user = create_user(db=db, user=user)
+    await db.commit()
+    user = await crud.get_user(db=db, user_id=db_user.id)
     response.status_code = status.HTTP_201_CREATED
-    return db_user
+    return user

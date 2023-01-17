@@ -1,11 +1,12 @@
+import asyncio 
+
 from fastapi import FastAPI
 
-from db.models import Base
-from db.database import engine
+from db.database import init_models
 from api import api
 
 
-Base.metadata.create_all(bind=engine)
+asyncio.get_event_loop().create_task(init_models())
 
 app = FastAPI()
 

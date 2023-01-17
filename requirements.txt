@@ -6,3 +6,5 @@ passlib==1.7.4
 python-multipart==0.0.5
 httpx==0.23.1
 pytest==7.2.0
+async-sqlalchemy
+greenlet

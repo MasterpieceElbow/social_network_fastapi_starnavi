@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
 from passlib.context import CryptContext
 
@@ -25,10 +25,10 @@ def get_password_hash(password) -> str:
     return pwd_context.hash(password)
 
 
-def authenticate_user(
-        db: Session, username: str, password: str
+async def authenticate_user(
+        db: AsyncSession, username: str, password: str
 ) -> Optional[models.User]:
-    user_db = crud.get_user_by_username(db=db, username=username)
+    user_db = await crud.get_user_by_username(db=db, username=username)
     if not user_db:
         return
     if not verify_password(password, user_db.hashed_password):
@@ -36,15 +36,13 @@ def authenticate_user(
     return user_db
 
 
-def create_user(db: Session, user: schemas.UserCreate) -> models.User:
+def create_user(db: AsyncSession, user: schemas.UserCreate) -> models.User:
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         username=user.username,
         hashed_password=hashed_password,
     )
     db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
     return db_user
 
 

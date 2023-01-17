@@ -7,7 +7,7 @@ from fastapi import (
     Query,
     HTTPException,
 )
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from authentication.dependencies import get_current_user
 from db.dependencies import get_db
@@ -21,9 +21,13 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=dict[date, int], tags=["likes"])
-def likes_by_period(
-        db: Session = Depends(get_db),
+@router.get(
+    "/", 
+    response_model=dict[date, int], 
+    tags=["likes"]
+)
+async def likes_by_period(
+        db: AsyncSession = Depends(get_db),
         date_from: date = Query(),
         date_to: date = Query()
 ):
@@ -32,6 +36,7 @@ def likes_by_period(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="date_to should be greater than or equal to date_from"
         )
-    return crud.get_likes_within_period_group_by_date(
+    await db.commit()
+    return await crud.get_likes_within_period_group_by_date(
         date_from=date_from, date_to=date_to, db=db
     )
