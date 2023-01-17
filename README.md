@@ -13,6 +13,7 @@ Python3 should be installed
 7. Can authorize with `user1:password1` or `user2:password2`
 
 ## 1.2 Features:
+- Asynchronous views and PostgreSQL queries
 - Login and sing up via OAuth2 and JWT
 - Authentication tests
 - alembic migrations
