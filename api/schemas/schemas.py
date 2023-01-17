@@ -31,12 +31,15 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    posts: list[Post] = []
     last_login: Optional[datetime] = None
     last_request: Optional[datetime] = None
 
     class Config:
         orm_mode = True
+
+
+class UserDetail(User):
+    posts: list[Post] = []
 
 
 class UserDB(User):

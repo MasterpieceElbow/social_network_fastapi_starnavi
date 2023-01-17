@@ -7,11 +7,12 @@ from sqlalchemy import (
     String,
     DateTime,
     Table,
+    UniqueConstraint
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+from db.database import Base
+
 
 PostsLikes = Table(
     "post_likes",
@@ -19,7 +20,9 @@ PostsLikes = Table(
     Column("id", Integer, primary_key=True, index=True),
     Column("post_id", Integer, ForeignKey("posts.id")),
     Column("user_id", Integer, ForeignKey("users.id")),
-    Column('created', DateTime, default=datetime.datetime.now)
+    Column('created', DateTime, default=datetime.datetime.now),
+    UniqueConstraint('post_id', 'user_id', name='post_user_unique'),
+    
 )
 
 
@@ -35,6 +38,9 @@ class User(Base):
     posts = relationship("Post", back_populates="owner")
     liked_posts = relationship("Post", secondary=PostsLikes, back_populates="likes")
 
+    def __repr__(self):
+        return f"<User, ID:{self.id}, username:{self.username}>"
+
 
 class Post(Base):
     __tablename__ = "posts"
@@ -48,3 +54,6 @@ class Post(Base):
     likes = relationship(
         "User", secondary=PostsLikes, back_populates="liked_posts"
     )
+
+    def __repr__(self):
+        return f"<Post, ID:{self.id}, username:{self.title}>"
