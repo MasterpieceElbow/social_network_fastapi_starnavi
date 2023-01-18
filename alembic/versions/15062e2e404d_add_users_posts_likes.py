@@ -1,8 +1,8 @@
-"""models_init
+"""add users, posts, likes
 
-Revision ID: 6efaccaed981
-Revises: a9f64e1533b3
-Create Date: 2022-12-14 15:34:29.756166
+Revision ID: 15062e2e404d
+Revises: 7afe5256ce4d
+Create Date: 2023-01-18 13:24:51.051124
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6efaccaed981'
-down_revision = 'a9f64e1533b3'
+revision = '15062e2e404d'
+down_revision = '7afe5256ce4d'
 branch_labels = None
 depends_on = None
 
@@ -46,7 +46,8 @@ def upgrade() -> None:
     sa.Column('created', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('post_id', 'user_id', name='post_user_unique')
     )
     op.create_index(op.f('ix_post_likes_id'), 'post_likes', ['id'], unique=False)
     # ### end Alembic commands ###
