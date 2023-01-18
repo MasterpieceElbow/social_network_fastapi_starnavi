@@ -1,16 +1,28 @@
-### Starnavi's "Social network" fastapi test task
+### Starnavi's "Social network" async fastapi test task
 
 ## 1.1 Installation:
 
 Python3 should be installed
 
-1. Install venv `python3 -m venv venv`
-2. Activate venv `source venv/bin/activate`
-3. Install requirements `pip install -r requirements.txt`
-4. Launch server `uvicorn main:app --reload`
-5. Check api endpoints docs:  `http://127.0.0.1:8000/docs`
-6. Run tests: `python -m pytest`
-7. Can authorize with `user1:password1` or `user2:password2`
+Venv:
+- Install venv `python3 -m venv venv`
+- Activate venv `source venv/bin/activate`
+- Install requirements `pip install -r requirements.txt`
+   
+DB:
+- Metadata: user:`postgres`, password:`postgres`, host:`localhost`, dbname: `social_network`
+- Make migrations `alembic upgrade head`
+- Restore data `psql social_network < db.dump`
+
+Run server:
+- Launch server `uvicorn main:app --reload`
+- Check api endpoints docs:  `http://127.0.0.1:8000/docs`
+   
+Tests:
+- Run tests: `python -m pytest`
+  
+Authorize
+- Can authorize with `user1:pass1` or `user2:pass1`
 
 ## 1.2 Features:
 - Asynchronous views and PostgreSQL queries
